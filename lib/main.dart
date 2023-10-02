@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:uni_map/screens/home.dart';
 import 'package:uni_map/screens/splash.dart';
+import 'package:uni_map/screens/waiting_verification.dart';
 import 'firebase_options.dart';
 
 import 'package:uni_map/screens/auth.dart';
@@ -29,12 +30,16 @@ class App extends StatelessWidget {
       ),
       home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (ctx, snaphot) {
-            if (snaphot.connectionState == ConnectionState.waiting) {
+          builder: (ctx, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return const SplashScreen();
             }
 
-            if (snaphot.hasData) {
+            if (snapshot.hasData) {
+              final user = snapshot.data as User;
+              if (!user.emailVerified) {
+                return const WaitingVerificationScreen();
+              }
               return const HomeScreen();
             }
 

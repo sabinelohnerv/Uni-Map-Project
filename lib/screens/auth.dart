@@ -25,6 +25,7 @@ class _AuthScreenState extends State<AuthScreen> {
   var _enteredUsername = '';
   var _enteredPassword = '';
   var _isAuthenticating = false;
+  var _obscureText = true;
   File? _selectedImage;
 
   bool isValidEmail(String email) {
@@ -33,6 +34,16 @@ class _AuthScreenState extends State<AuthScreen> {
       caseSensitive: false,
     );
     return regex.hasMatch(email);
+  }
+
+  bool isValidPassword(String password) {
+    if (password.length < 8) return false;
+    if (!password.contains(RegExp(r'[a-z]'))) return false;
+    if (!password.contains(RegExp(r'[A-Z]'))) return false;
+    if (!password.contains(RegExp(r'[0-9]'))) return false;
+    if (!password.contains(RegExp(r'[!@#\$&*~]'))) return false;
+
+    return true;
   }
 
   void _submit() async {
@@ -54,6 +65,10 @@ class _AuthScreenState extends State<AuthScreen> {
       } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
+
+        final user = userCredentials.user;
+        await user!.sendEmailVerification();
+
         if (_selectedImage != null) {
           final storageRef = FirebaseStorage.instance
               .ref()
@@ -73,9 +88,6 @@ class _AuthScreenState extends State<AuthScreen> {
         }
       }
     } on FirebaseAuthException catch (error) {
-      if (error.code == 'email-already-in-use') {
-        // ...
-      }
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -161,20 +173,56 @@ class _AuthScreenState extends State<AuthScreen> {
                               },
                             ),
                           TextFormField(
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Contraseña',
+                              suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscureText = !_obscureText;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    _obscureText
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  )),
                             ),
-                            obscureText: true,
+                            obscureText: _obscureText,
                             validator: (value) {
-                              if (value == null || value.trim().length < 8) {
+                              if (value == null || !isValidPassword(value)) {
                                 return 'La contraseña debe tener al menos 8 caracteres.';
                               }
+                              _enteredPassword = value;
                               return null;
                             },
                             onSaved: (value) {
                               _enteredPassword = value!;
                             },
                           ),
+                          if (!_isLogin)
+                            TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Confirmar contraseña',
+                                suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _obscureText = !_obscureText;
+                                      });
+                                    },
+                                    icon: Icon(
+                                      _obscureText
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                    )),
+                              ),
+                              obscureText: _obscureText,
+                              validator: (value) {
+                                if (value != _enteredPassword) {
+                                  return 'Las contraseñas no coinciden.';
+                                }
+                                return null;
+                              },
+                            ),
                           const SizedBox(
                             height: 12,
                           ),

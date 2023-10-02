@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class WaitingVerificationScreen extends StatelessWidget {
+  const WaitingVerificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: const Center(
-        child: Text('Home Screen'),
+        child: Text('Por favor verifica tu correo electrónico.'),
       ),
     );
   }
