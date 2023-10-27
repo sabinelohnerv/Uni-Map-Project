@@ -1,12 +1,8 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uni_map/widgets/user_image_picker.dart';
-
-final _firebase = FirebaseAuth.instance;
+import 'package:uni_map/services/firebase_auth_service.dart';
+import 'package:uni_map/functions/util.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -19,7 +15,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final _form = GlobalKey<FormState>();
-
+  final FirebaseAuthService _authService = FirebaseAuthService();
   var _isLogin = true;
   var _enteredEmail = '';
   var _enteredUsername = '';
@@ -28,76 +24,101 @@ class _AuthScreenState extends State<AuthScreen> {
   var _obscureText = true;
   File? _selectedImage;
 
-  bool isValidEmail(String email) {
-    final RegExp regex = RegExp(
-      r"^[a-zA-Z0-9._%+-]+@(?:univalle\.edu|est\.univalle\.edu)$",
-      caseSensitive: false,
-    );
-    return regex.hasMatch(email);
-  }
-
-  bool isValidPassword(String password) {
-    if (password.length < 8) return false;
-    if (!password.contains(RegExp(r'[a-z]'))) return false;
-    if (!password.contains(RegExp(r'[A-Z]'))) return false;
-    if (!password.contains(RegExp(r'[0-9]'))) return false;
-    if (!password.contains(RegExp(r'[!@#\$&*~]'))) return false;
-
-    return true;
-  }
-
   void _submit() async {
     final isValid = _form.currentState!.validate();
-
     if (!isValid) {
       return;
     }
 
     _form.currentState!.save();
+    setState(() {
+      _isAuthenticating = true;
+    });
 
-    try {
-      setState(() {
-        _isAuthenticating = true;
-      });
-      if (_isLogin) {
-        final userCredentials = await _firebase.signInWithEmailAndPassword(
-            email: _enteredEmail, password: _enteredPassword);
-      } else {
-        final userCredentials = await _firebase.createUserWithEmailAndPassword(
-            email: _enteredEmail, password: _enteredPassword);
-
-        final user = userCredentials.user;
-        await user!.sendEmailVerification();
-
-        if (_selectedImage != null) {
-          final storageRef = FirebaseStorage.instance
-              .ref()
-              .child('user_images')
-              .child('${userCredentials.user!.uid}.jpg');
-          await storageRef.putFile(_selectedImage!);
-          final imageUrl = await storageRef.getDownloadURL();
-
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(userCredentials.user!.uid)
-              .set({
-            'username': _enteredUsername,
-            'email': _enteredEmail,
-            'image_url': imageUrl,
-          });
-        }
-      }
-    } on FirebaseAuthException catch (error) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.message ?? 'Fallo en la autenticación.'),
-        ),
-      );
-      setState(() {
-        _isAuthenticating = false;
-      });
+    if (_isLogin) {
+      await _authService.signInWithEmailAndPassword(
+          _enteredEmail, _enteredPassword);
+    } else {
+      await _authService.createUserWithEmailAndPassword(
+          _enteredEmail, _enteredPassword, _enteredUsername, _selectedImage);
     }
+
+    setState(() {
+      _isAuthenticating = false;
+    });
+  }
+
+  Future<void> _showForgotPasswordDialog() async {
+    String? email;
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Restablecer Contraseña'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text('Por favor, ingresa tu correo electrónico.'),
+                TextField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'ejemplo@univalle.edu',
+                  ),
+                  onChanged: (value) {
+                    email = value;
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Enviar'),
+              onPressed: () async {
+                if (email != null &&
+                    email!.isNotEmpty &&
+                    isValidEmail(email!)) {
+                  final bool emailSent =
+                      await _authService.sendPasswordResetEmail(email!);
+                  if (emailSent) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            'Correo de restablecimiento enviado. Por favor, revisa tu bandeja de entrada.'),
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            'Por favor, ingresa un correo electrónico válido.'),
+                      ),
+                    );
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          'Por favor, ingresa un correo electrónico válido.'),
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -117,8 +138,12 @@ class _AuthScreenState extends State<AuthScreen> {
                   right: 20,
                 ),
                 width: 200,
-                child: Image.asset('assets/images/univalle.png',
-                    color: Colors.white),
+                child: Image.asset(
+                  'assets/images/univalle.png',
+                  color: Colors.white,
+                  width: 180,
+                  height: 180,
+                ),
               ),
               Card(
                 margin: const EdgeInsets.all(20),
@@ -157,8 +182,8 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                           if (!_isLogin)
                             TextFormField(
-                              decoration:
-                                  const InputDecoration(labelText: 'Username'),
+                              decoration: const InputDecoration(
+                                  labelText: 'Nombre de usuario'),
                               enableSuggestions: false,
                               validator: (value) {
                                 if (value == null ||
@@ -228,6 +253,9 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                           if (_isAuthenticating)
                             const CircularProgressIndicator(),
+                          const SizedBox(
+                            height: 12,
+                          ),
                           if (!_isAuthenticating)
                             ElevatedButton(
                               onPressed: _submit,
@@ -238,6 +266,14 @@ class _AuthScreenState extends State<AuthScreen> {
                               ),
                               child: Text(
                                   _isLogin ? 'Iniciar Sesión' : 'Registrarse'),
+                            ),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          if (!_isAuthenticating && _isLogin)
+                            TextButton(
+                              onPressed: _showForgotPasswordDialog,
+                              child: const Text('Olvidé mi contraseña'),
                             ),
                           if (!_isAuthenticating)
                             TextButton(

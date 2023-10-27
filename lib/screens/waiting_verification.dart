@@ -8,19 +8,54 @@ class WaitingVerificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('UniMap'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-            icon: Icon(Icons.exit_to_app,
-                color: Theme.of(context).colorScheme.primary),
-          ),
-        ],
+        title: const Row(
+          children: [
+            Image(
+              image: AssetImage('assets/images/univalle_wordless.png'),
+              height: 55,
+              width: 55,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 1,
+            ),
+            Text(
+              'Univalle Map',
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: const Center(
-        child: Text('Por favor verifica tu correo electrónico.'),
+      body: Center(
+        child: Card(
+          margin: const EdgeInsets.all(20),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Por favor verifica tu correo electrónico.',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20,),
+                ElevatedButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                  ),
+                  child: const Text('Cerrar Sesión',
+                      style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
