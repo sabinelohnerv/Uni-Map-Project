@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uni_map/widgets/map_details/building_info.dart';
+import 'package:uni_map/widgets/map_details/buildings/building_info.dart';
 
 class BuildingCard extends StatelessWidget {
   const BuildingCard({
@@ -8,6 +8,7 @@ class BuildingCard extends StatelessWidget {
     required this.pHorizontal,
     required this.color,
     required this.moduleText,
+    required this.requestId,
     this.icon,
   });
 
@@ -16,6 +17,7 @@ class BuildingCard extends StatelessWidget {
   final Color color;
   final String moduleText;
   final IconData? icon;
+  final String requestId;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,8 @@ class BuildingCard extends StatelessWidget {
       onTap: () {
         showDialog(
           context: context,
-          builder: (BuildContext context) => const BuildingInfo(),
+          builder: (BuildContext context) =>
+              BuildingInfo(buildingId: requestId),
         );
       },
       child: Card(
@@ -41,7 +44,8 @@ class BuildingCard extends StatelessWidget {
                 Text(
                   moduleText,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey.shade800, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.grey.shade800, fontWeight: FontWeight.bold),
                 ),
             ],
           ),

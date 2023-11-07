@@ -20,7 +20,7 @@ class WaitingVerificationScreen extends StatelessWidget {
               width: 1,
             ),
             Text(
-              'Univalle Map',
+              'UniMap',
               style: TextStyle(color: Colors.white),
             ),
           ],

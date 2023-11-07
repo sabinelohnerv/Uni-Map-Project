@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uni_map/main.dart';
-import 'package:uni_map/screens/tab_screens/details.dart';
+import 'package:uni_map/building_details/ui/building_details.dart';
 import 'package:uni_map/screens/tab_screens/map.dart';
 import 'package:uni_map/screens/tab_screens/profile.dart';
 
@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
               ),
               SizedBox(width: 1,),
               Text(
-                'Univalle Map',
+                'UniMap',
                 style: TextStyle(color: Colors.white),
               ),
             ],
@@ -66,7 +66,7 @@ class HomeScreen extends StatelessWidget {
         body: const TabBarView(
           children: [
             UniMap(),
-            Details(),
+            BuildingDetails(),
             Profile(),
           ],
         ),

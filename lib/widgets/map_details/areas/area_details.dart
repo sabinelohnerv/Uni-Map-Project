@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:uni_map/widgets/map_details/building_info.dart';
+import 'package:uni_map/widgets/map_details/areas/area_info.dart';
 
-class MapDetail extends StatelessWidget {
-  const MapDetail({
+class AreaDetail extends StatelessWidget {
+  const AreaDetail({
     super.key,
     required this.image,
     required this.topPosition,
     required this.rightPosition,
     required this.imageWidth,
     required this.imageHeight,
+    required this.requestId,
   });
 
   final String image;
@@ -16,6 +17,7 @@ class MapDetail extends StatelessWidget {
   final double rightPosition;
   final double imageWidth;
   final double imageHeight;
+  final String requestId;
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +27,16 @@ class MapDetail extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           showDialog(
-          context: context,
-          builder: (BuildContext context) => const BuildingInfo(),
-        );
+            context: context,
+            builder: (BuildContext context) =>
+                AreaInfo(buildingId: requestId),
+          );
         },
-        child: Image.asset('assets/images/$image.png', width: imageWidth, height: imageHeight,),
+        child: Image.asset(
+          'assets/images/$image.png',
+          width: imageWidth,
+          height: imageHeight,
+        ),
       ),
     );
   }

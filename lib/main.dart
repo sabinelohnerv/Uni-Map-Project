@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uni_map/building_details/bloc/buildings_bloc.dart';
 import 'package:uni_map/screens/home.dart';
 import 'package:uni_map/screens/splash.dart';
 import 'package:uni_map/screens/waiting_verification.dart';
@@ -34,46 +36,53 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'FlutterChat',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData().copyWith(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 28, 1, 12)),
-      ),
-      home: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (ctx, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SplashScreen();
-          }
-
-          if (snapshot.hasData) {
-            final user = snapshot.data as User;
-
-            if (!user.emailVerified) {
-              return FutureBuilder(
-                future: checkEmailVerified(user),
-                builder: (ctx, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const WaitingVerificationScreen();
-                  }
-
-                  if (snapshot.data!) {
-                    return const HomeScreen();
-                  } else {
-                    return const WaitingVerificationScreen();
-                  }
-                },
-              );
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<BuildingBloc>(
+          create: (context) => BuildingBloc(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'FlutterChat',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData().copyWith(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color.fromARGB(255, 28, 1, 12)),
+        ),
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (ctx, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SplashScreen();
             }
 
-            return const HomeScreen();
-          }
+            if (snapshot.hasData) {
+              final user = snapshot.data as User;
 
-          return const AuthScreen();
-        },
+              if (!user.emailVerified) {
+                return FutureBuilder(
+                  future: checkEmailVerified(user),
+                  builder: (ctx, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const WaitingVerificationScreen();
+                    }
+
+                    if (snapshot.data!) {
+                      return const HomeScreen();
+                    } else {
+                      return const WaitingVerificationScreen();
+                    }
+                  },
+                );
+              }
+
+              return const HomeScreen();
+            }
+
+            return const AuthScreen();
+          },
+        ),
       ),
     );
   }

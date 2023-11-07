@@ -1,8 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:uni_map/widgets/map_details/building_card.dart';
-import 'package:uni_map/widgets/map_details/map_details.dart';
+import 'package:uni_map/widgets/map_details/areas/area_info.dart';
+import 'package:uni_map/widgets/map_details/buildings/building_card.dart';
+import 'package:uni_map/widgets/map_details/areas/area_details.dart';
 import 'package:uni_map/widgets/search_bar.dart';
 
 class MapCards extends StatelessWidget {
@@ -12,19 +13,21 @@ class MapCards extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const MapDetail(
+        const AreaDetail(
           image: 'football_field',
           topPosition: 418,
           rightPosition: 160,
           imageWidth: 75,
           imageHeight: 75,
+          requestId: 'CF',
         ),
-        const MapDetail(
+        const AreaDetail(
           image: 'hexagon_cowork',
           topPosition: 160,
           rightPosition: 86,
           imageWidth: 80,
           imageHeight: 80,
+          requestId: 'CW1',
         ),
         Positioned(
           top: 228,
@@ -34,6 +37,7 @@ class MapCards extends StatelessWidget {
             pVertical: 15,
             color: Colors.indigo.shade200,
             moduleText: 'Módulo 4',
+            requestId: '4',
           ),
         ),
         Positioned(
@@ -44,6 +48,7 @@ class MapCards extends StatelessWidget {
             pVertical: 20,
             color: Colors.orange.shade300,
             moduleText: 'Módulo 2',
+            requestId: '2',
           ),
         ),
         Positioned(
@@ -67,6 +72,7 @@ class MapCards extends StatelessWidget {
             pVertical: 8,
             color: Colors.red.shade300,
             moduleText: '',
+            requestId: '8',
           ),
         ),
         Positioned(
@@ -77,6 +83,7 @@ class MapCards extends StatelessWidget {
             pVertical: 3,
             color: Colors.red.shade300,
             moduleText: '',
+            requestId: '8',
           ),
         ),
         Positioned(
@@ -87,6 +94,7 @@ class MapCards extends StatelessWidget {
             pVertical: 20,
             color: Colors.red.shade300,
             moduleText: 'Módulo\n8',
+            requestId: '8',
           ),
         ),
         Positioned(
@@ -98,6 +106,7 @@ class MapCards extends StatelessWidget {
             color: Colors.orange.shade100,
             moduleText: '',
             icon: Icons.fastfood,
+            requestId: '5',
           ),
         ),
         Positioned(
@@ -108,6 +117,7 @@ class MapCards extends StatelessWidget {
             pVertical: 14,
             color: Colors.green.shade200,
             moduleText: '',
+            requestId: '3A',
           ),
         ),
         Positioned(
@@ -118,6 +128,7 @@ class MapCards extends StatelessWidget {
             pVertical: 14,
             color: Colors.green.shade200,
             moduleText: '',
+            requestId: '3A',
           ),
         ),
         Positioned(
@@ -128,6 +139,7 @@ class MapCards extends StatelessWidget {
             pVertical: 14,
             color: Colors.green.shade200,
             moduleText: 'Módulo 3A',
+            requestId: '3A',
           ),
         ),
         Positioned(
@@ -138,6 +150,7 @@ class MapCards extends StatelessWidget {
             pVertical: 20,
             color: Colors.green.shade200,
             moduleText: '',
+            requestId: '3B',
           ),
         ),
         Positioned(
@@ -148,6 +161,7 @@ class MapCards extends StatelessWidget {
             pVertical: 8,
             color: Colors.green.shade200,
             moduleText: 'Módulo \n3B',
+            requestId: '3B',
           ),
         ),
         Positioned(
@@ -158,6 +172,7 @@ class MapCards extends StatelessWidget {
             pVertical: 2,
             color: Colors.green.shade200,
             moduleText: 'Módulo \n3C',
+            requestId: '3C',
           ),
         ),
         Positioned(
@@ -168,18 +183,20 @@ class MapCards extends StatelessWidget {
             pVertical: 14,
             color: Colors.blue.shade200,
             moduleText: 'Módulo 7',
+            requestId: '7',
           ),
         ),
         Positioned(
           top: 64,
           left: 188,
           child: Transform.rotate(
-            angle: pi/20,
+            angle: pi / 20,
             child: BuildingCard(
               pHorizontal: 14,
               pVertical: 2,
               color: Colors.yellow.shade500,
               moduleText: '',
+              requestId: '1A',
             ),
           ),
         ),
@@ -187,12 +204,13 @@ class MapCards extends StatelessWidget {
           top: 57,
           left: 130,
           child: Transform.rotate(
-            angle: pi/20,
+            angle: pi / 20,
             child: BuildingCard(
               pHorizontal: 4,
               pVertical: 2,
               color: Colors.yellow.shade500,
               moduleText: 'Módulo \n1A',
+              requestId: '1A',
             ),
           ),
         ),
@@ -200,12 +218,13 @@ class MapCards extends StatelessWidget {
           top: 69,
           left: 214,
           child: Transform.rotate(
-            angle: pi/20,
+            angle: pi / 20,
             child: BuildingCard(
               pHorizontal: 10,
               pVertical: 6,
               color: Colors.yellow.shade500,
               moduleText: '1B',
+              requestId: '1B',
             ),
           ),
         ),
@@ -213,25 +232,42 @@ class MapCards extends StatelessWidget {
           top: 61,
           left: 100,
           child: Transform.rotate(
-            angle: pi/20,
+            angle: pi / 20,
             child: BuildingCard(
               pHorizontal: 3,
               pVertical: 1,
               color: Colors.orange.shade500,
               moduleText: '',
               icon: Icons.monetization_on,
+              requestId: '1AB',
             ),
           ),
         ),
         Positioned(
           top: 250,
           left: 60,
-          child: BuildingCard(
-            pHorizontal: 2,
-            pVertical: 2,
-            color: Colors.blue.shade100,
-            moduleText: '',
-            icon: Icons.local_parking,
+          child: InkWell(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    const AreaInfo(buildingId: 'PQ'),
+              );
+            },
+            child: Card(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+              ),
+              color: Colors.blue.shade100,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                child: Column(
+                  children: [
+                    Icon(Icons.local_parking, color: Colors.grey.shade800),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
         const Positioned(
