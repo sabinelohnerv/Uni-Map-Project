@@ -139,7 +139,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
                 width: 200,
                 child: Image.asset(
-                  'assets/images/univalle.png',
+                  'assets/images/logo.png',
                   color: Colors.white,
                   width: 180,
                   height: 180,

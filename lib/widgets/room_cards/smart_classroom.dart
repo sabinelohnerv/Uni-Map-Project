@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:uni_map/widgets/room_cards/room_decorator.dart';
 
-class SmartClassroomDecorator extends ClassroomDecorator {
-  const SmartClassroomDecorator({super.key, required Widget child}) : super(child: child);
+class SmartRoomDecorator extends RoomDecorator {
+  const SmartRoomDecorator({super.key, required Widget child}) : super(child: child);
 
   @override
   Widget build(BuildContext context) {

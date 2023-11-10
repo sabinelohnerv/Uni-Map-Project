@@ -8,6 +8,7 @@ import 'package:uni_map/widgets/room_cards/lab_classroom.dart';
 import 'package:uni_map/widgets/room_cards/room_card.dart';
 import 'package:uni_map/widgets/room_cards/smart_classroom.dart';
 
+
 class RoomsByBuilding extends StatefulWidget {
   const RoomsByBuilding({super.key, required this.id});
 
@@ -41,16 +42,16 @@ class _RoomByBuildingState extends State<RoomsByBuilding> {
         title: const Row(
           children: [
             SizedBox(
-              width: 26,
+              width: 57,
             ),
             Image(
-              image: AssetImage('assets/images/univalle_wordless.png'),
-              height: 55,
-              width: 55,
+              image: AssetImage('assets/images/logo.png'),
+              height: 33,
+              width: 33,
               color: Colors.white,
             ),
             SizedBox(
-              width: 1,
+              width: 5,
             ),
             Text(
               'UniMap',
@@ -140,18 +141,18 @@ Widget buildExpandableList(String title, Future<List<dynamic>> futureList) {
             Widget roomCard =
                 RoomCard(displayText: finalText, level: item['level']);
             if (itemName.contains('SMART')) {
-              roomCard = SmartClassroomDecorator(child: roomCard);
+              roomCard = SmartRoomDecorator(child: roomCard);
             } else if (itemName
                 .contains('LABORATORIO') && !itemName.contains('COCINA') && !itemName.contains('PANADERIA') && !itemName.contains('PASTELERIA') && !itemName.contains('FABLAB')) {
-              roomCard = LabClassroomDecorator(child: roomCard);
+              roomCard = LabRoomDecorator(child: roomCard);
             } else if (itemName.contains('COMPUTO')) {
-              roomCard = ComputerClassroomDecorator(child: roomCard);
+              roomCard = ComputerRoomDecorator(child: roomCard);
             } else if (itemName.contains('COCINA') || itemName.contains('PANADERIA') || itemName.contains('PASTELERIA')) {
-              roomCard = KitchenClassroomDecorator(child: roomCard);
+              roomCard = KitchenRoomDecorator(child: roomCard);
             } else if (itemName.contains('AUDITORIO')) {
-              roomCard = AuditoriumClassroomDecorator(child: roomCard);
+              roomCard = AuditoriumRoomDecorator(child: roomCard);
             } else if (itemName.contains('FABLAB')) {
-              roomCard = DesignClassroomDecorator(child: roomCard);
+              roomCard = DesignRoomDecorator(child: roomCard);
             }
             return roomCard;
           }).toList(),

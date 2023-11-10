@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-abstract class ClassroomDecorator extends StatelessWidget {
+abstract class RoomDecorator extends StatelessWidget {
   final Widget child;
-  const ClassroomDecorator({super.key, required this.child});
+  const RoomDecorator({super.key, required this.child});
 
   @override
   Widget build(BuildContext context);

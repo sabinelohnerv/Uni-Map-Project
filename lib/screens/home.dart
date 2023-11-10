@@ -21,12 +21,12 @@ class HomeScreen extends StatelessWidget {
           title: const Row(
             children: [
               Image(
-                image: AssetImage('assets/images/univalle_wordless.png'),
-                height: 55,
-                width: 55,
+                image: AssetImage('assets/images/logo.png'),
+                height: 33,
+                width:33,
                 color: Colors.white,
               ),
-              SizedBox(width: 1,),
+              SizedBox(width: 5,),
               Text(
                 'UniMap',
                 style: TextStyle(color: Colors.white),
