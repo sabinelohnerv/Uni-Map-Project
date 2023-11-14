@@ -14,7 +14,7 @@ class SmartRoomDecorator extends RoomDecorator {
         children: [
           child,
           const Positioned(
-            right: 10,
+            right: 30,
             top: 10,
             child: Icon(Icons.smart_screen, color: Colors.deepPurple),
           ),
