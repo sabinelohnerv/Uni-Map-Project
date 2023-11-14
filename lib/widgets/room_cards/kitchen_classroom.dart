@@ -14,7 +14,7 @@ class KitchenRoomDecorator extends RoomDecorator {
         children: [
           child,
           const Positioned(
-            right: 10,
+            right: 30,
             top: 10,
             child: Icon(Icons.soup_kitchen, color: Colors.orange),
           ),

@@ -14,7 +14,7 @@ class ComputerRoomDecorator extends RoomDecorator {
         children: [
           child,
           const Positioned(
-            right: 10,
+            right: 30,
             top: 10,
             child: Icon(Icons.computer, color: Colors.blue),
           ),

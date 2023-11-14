@@ -43,7 +43,7 @@ class App extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'FlutterChat',
+        title: 'UniMap',
         debugShowCheckedModeBanner: false,
         theme: ThemeData().copyWith(
           useMaterial3: true,

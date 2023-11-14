@@ -13,9 +13,9 @@ class RoomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 18),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: Colors.grey.shade100),
       ),
       child: ListTile(
         title: Text(displayText),

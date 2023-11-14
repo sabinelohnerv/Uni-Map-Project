@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uni_map/widgets/location_search.dart';
 
 class LocationSearchBar extends StatefulWidget {
   const LocationSearchBar({super.key});
@@ -11,6 +10,14 @@ class LocationSearchBar extends StatefulWidget {
 }
 
 class _LocationSearchBarState extends State<LocationSearchBar> {
+  final TextEditingController searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,21 +28,15 @@ class _LocationSearchBarState extends State<LocationSearchBar> {
         color: Colors.white.withOpacity(0.8),
       ),
       child: TextField(
+        controller: searchController,
         decoration: InputDecoration(
           hintText: '¿Qué estás buscando?',
           border: InputBorder.none,
           contentPadding: const EdgeInsets.only(left: 15.0, top: 15.0),
           suffixIcon: IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () async {
-              final String? selected = await showSearch(
-                context: context,
-                delegate: LocationSearch(),
-              );
-              if (selected != null && selected.isNotEmpty) {
-                // TODO
-                print(selected);
-              }
+            onPressed: () {
+              
             },
             iconSize: 30.0,
           ),
