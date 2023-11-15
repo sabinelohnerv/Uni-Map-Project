@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uni_map/building_details/bloc/buildings_bloc.dart';
 import 'package:uni_map/screens/home.dart';
 import 'package:uni_map/screens/splash.dart';
-import 'package:uni_map/screens/waiting_verification.dart';
+import 'package:uni_map/screens/auth_screens/waiting_verification.dart';
 import 'firebase_options.dart';
 
-import 'package:uni_map/screens/auth.dart';
+import 'package:uni_map/screens/auth_screens/auth.dart';
 
 List<String> titles = <String>[
   'Campus',

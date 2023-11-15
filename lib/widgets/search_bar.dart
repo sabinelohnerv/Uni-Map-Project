@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uni_map/screens/search_results.dart';
 
 class LocationSearchBar extends StatefulWidget {
   const LocationSearchBar({super.key});
@@ -36,7 +37,13 @@ class _LocationSearchBarState extends State<LocationSearchBar> {
           suffixIcon: IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              
+              String query = searchController.text.trim().toUpperCase();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        SearchResults(query: query)),
+              );
             },
             iconSize: 30.0,
           ),
