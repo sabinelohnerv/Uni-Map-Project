@@ -17,26 +17,39 @@ class _SearchResultsState extends State<SearchResults> {
   var areasResults = [];
   var buildingsResults = [];
   var combinedResults = [];
+  bool isQueryComplete = false;
 
   Future<void> fetchSearchResults() async {
-    final response = await http.get(Uri.parse(
-        'https://us-central1-uni-map-fe7c6.cloudfunctions.net/app/search?q=${widget.query}'));
+    setState(() {
+      isQueryComplete = false;
+    });
 
-    if (response.statusCode == 200) {
-      final data = convert.jsonDecode(response.body);
-      areasResults = data['areas'];
-      print(areasResults);
-      buildingsResults = data['buildings'];
-      print(buildingsResults);
+    try {
+      final response = await http.get(Uri.parse(
+          'https://us-central1-uni-map-fe7c6.cloudfunctions.net/app/search?q=${widget.query}'));
 
+      if (response.statusCode == 200) {
+        final data = convert.jsonDecode(response.body);
+        areasResults = data['areas'];
+        buildingsResults = data['buildings'];
+
+        setState(() {
+          combinedResults = [
+            ...areasResults.map((e) => {'type': 'area', 'data': e}),
+            ...buildingsResults.map((e) => {'type': 'building', 'data': e})
+          ];
+          isQueryComplete = true;
+        });
+      } else {
+        setState(() {
+          isQueryComplete = true;
+        });
+        throw Exception('Failed to load search results.');
+      }
+    } catch (e) {
       setState(() {
-        combinedResults = [
-          ...areasResults.map((e) => {'type': 'area', 'data': e}),
-          ...buildingsResults.map((e) => {'type': 'building', 'data': e})
-        ];
+        isQueryComplete = true;
       });
-    } else {
-      throw Exception('Failed to load search results.');
     }
   }
 
@@ -84,42 +97,47 @@ class _SearchResultsState extends State<SearchResults> {
         ),
       ),
       body: Center(
-        child: combinedResults.isEmpty
-            ? const CircularProgressIndicator()
-            : ListView.builder(
-                itemCount: combinedResults.length,
-                itemBuilder: (context, index) {
-                  var item = combinedResults[index];
-                  if (item['type'] == 'building') {
-                    var buildingData = item['data'];
-                    if (buildingData['commonAreas'] != null &&
-                        buildingData['commonAreas'].isNotEmpty) {
-                      return ListTile(
-                        title: Text(buildingData['commonAreas'][0]['name']),
-                        subtitle: Text("${buildingData['name']} - ${buildingData['commonAreas'][0]['level']}"),
-                      );
-                    } else if (buildingData['rooms'] != null &&
-                        buildingData['rooms'].isNotEmpty) {
-                      return ListTile(
-                        title: Text("${buildingData['rooms'][0]['id']} - ${buildingData['rooms'][0]['name']}"),
-                        subtitle: Text("${buildingData['name']} - ${buildingData['rooms'][0]['level']}"),
-                      );
-                    } else {
-                      return ListTile(
-                        title: Text(buildingData['name']),
-                        subtitle: Text(buildingData['description']),
-                      );
-                    }
-                  } else if (item['type'] == 'area') {
-                    var areaData = item['data'];
-                    return ListTile(
-                      title: Text(areaData['name']),
-                      subtitle: Text(areaData['type']),
-                    );
-                  }
-                  return SizedBox.shrink();
-                },
-              ),
+        child: !isQueryComplete
+            ? CircularProgressIndicator()
+            : (combinedResults.isEmpty)
+                ? Text('No se encontraron resultados para: ${widget.query}')
+                : ListView.builder(
+                    itemCount: combinedResults.length,
+                    itemBuilder: (context, index) {
+                      var item = combinedResults[index];
+                      if (item['type'] == 'building') {
+                        var buildingData = item['data'];
+                        if (buildingData['commonAreas'] != null &&
+                            buildingData['commonAreas'].isNotEmpty) {
+                          return ListTile(
+                            title: Text(buildingData['commonAreas'][0]['name']),
+                            subtitle: Text(
+                                "${buildingData['name']} - ${buildingData['commonAreas'][0]['level']}"),
+                          );
+                        } else if (buildingData['rooms'] != null &&
+                            buildingData['rooms'].isNotEmpty) {
+                          return ListTile(
+                            title: Text(
+                                "${buildingData['rooms'][0]['id']} - ${buildingData['rooms'][0]['name']}"),
+                            subtitle: Text(
+                                "${buildingData['name']} - ${buildingData['rooms'][0]['level']}"),
+                          );
+                        } else {
+                          return ListTile(
+                            title: Text(buildingData['name']),
+                            subtitle: Text(buildingData['description']),
+                          );
+                        }
+                      } else if (item['type'] == 'area') {
+                        var areaData = item['data'];
+                        return ListTile(
+                          title: Text(areaData['name']),
+                          subtitle: Text(areaData['type']),
+                        );
+                      }
+                      return SizedBox.shrink();
+                    },
+                  ),
       ),
     );
   }
