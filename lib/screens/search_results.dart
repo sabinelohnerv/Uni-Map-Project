@@ -12,9 +12,9 @@ class SearchResults extends StatefulWidget {
     return _SearchResultsState();
   }
 }
-
 class _SearchResultsState extends State<SearchResults> {
-  var areasResults = [];
+ 
+ var areasResults = [];
   var buildingsResults = [];
   var combinedResults = [];
   bool isQueryComplete = false;

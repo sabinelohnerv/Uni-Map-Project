@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uni_map/main.dart';
 import 'package:uni_map/building_details/ui/building_details.dart';
+import 'package:uni_map/screens/search_history.dart';
 import 'package:uni_map/screens/tab_screens/map.dart';
 import 'package:uni_map/screens/tab_screens/profile.dart';
 
@@ -23,10 +24,12 @@ class HomeScreen extends StatelessWidget {
               Image(
                 image: AssetImage('assets/images/logo.png'),
                 height: 33,
-                width:33,
+                width: 33,
                 color: Colors.white,
               ),
-              SizedBox(width: 5,),
+              SizedBox(
+                width: 5,
+              ),
               Text(
                 'UniMap',
                 style: TextStyle(color: Colors.white),
@@ -38,21 +41,10 @@ class HomeScreen extends StatelessWidget {
               icon: const Icon(Icons.navigate_next, color: Colors.white),
               tooltip: 'Historial de Búsqueda',
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute<void>(
-                  builder: (BuildContext context) {
-                    return Scaffold(
-                      appBar: AppBar(
-                        title: const Text('Página siguiente'),
-                      ),
-                      body: const Center(
-                        child: Text(
-                          'Esta es la siguiente página',
-                          style: TextStyle(fontSize: 24),
-                        ),
-                      ),
-                    );
-                  },
-                ));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchHistory()),
+                );
               },
             ),
           ],
