@@ -5,13 +5,11 @@ class BuildingHomeCard extends StatelessWidget {
   const BuildingHomeCard({
     required this.requestId,
     required this.name,
-    required this.description,
     super.key,
   });
 
   final String requestId;
   final String name;
-  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -20,31 +18,47 @@ class BuildingHomeCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => RoomsByBuilding(id: requestId)),
+            builder: (context) => RoomsByBuilding(id: requestId),
+          ),
         );
       },
-      child: Container(
+      child: Card(
         margin: const EdgeInsets.all(8),
-        padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 117, 13, 54),
+        elevation: 5,
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14.0),
+          side: const BorderSide(
+            color: Color.fromARGB(255, 13, 32, 117),
+            width: 2.0,
+          ),
         ),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(4),
-            child: ListTile(
-              title: Text(
-                name,
-                style: const TextStyle(fontSize: 18),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(14.0),
+          child: Stack(
+            children: [
+              Image.asset(
+                'assets/icon/icon.png',
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
               ),
-              subtitle: Text(
-                description,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 3,
-                style: const TextStyle(fontSize: 16),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  color: Colors.black.withOpacity(0.6),
+                  child: Text(
+                    name,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),

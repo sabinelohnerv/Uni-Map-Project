@@ -215,7 +215,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             obscureText: _obscureText,
                             validator: (value) {
                               if (value == null || !isValidPassword(value)) {
-                                return 'La contraseña debe tener al menos 8 caracteres.';
+                                return 'La contraseña debe tener al menos 8 caracteres,\n una mayúscula y un símbolo.';
                               }
                               _enteredPassword = value;
                               return null;

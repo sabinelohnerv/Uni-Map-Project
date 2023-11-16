@@ -99,14 +99,14 @@ class _ProfileState extends State<Profile> {
 
         return Center(
           child: SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 117, 13, 54),
-                borderRadius: BorderRadius.circular(14.0),
+            child: Card(
+              margin: const EdgeInsets.all(20),
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+                side: const BorderSide(
+                    color: Color.fromARGB(255, 117, 13, 54), width: 2.0),
               ),
-              child: Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -172,7 +172,6 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
-          ),
         );
       },
     );
