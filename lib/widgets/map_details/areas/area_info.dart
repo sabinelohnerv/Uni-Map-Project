@@ -32,10 +32,32 @@ class AreaInfo extends StatelessWidget {
         } else if (snapshot.hasData) {
           final data = snapshot.data!;
           return AlertDialog(
-            title: Text(data['name'] ?? 'No Name'),
+            elevation: 8,
+            backgroundColor: Color.fromARGB(255, 131, 16, 62),
+            title: Row(
+              children: [
+                Image.asset(
+                  'assets/icon/icon.png',
+                  width: 50,
+                  height: 50,
+                ),
+                const SizedBox(width: 2.0),
+                Text(
+                  data['name'] ?? 'No Name',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),      
             actions: <Widget>[
               TextButton(
-                child: const Text('Cerrar'),
+                child: const Text(
+                  'Cerrar',
+                  style: TextStyle(color: Colors.white)
+                ),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

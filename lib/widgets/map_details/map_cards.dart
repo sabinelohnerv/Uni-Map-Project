@@ -236,7 +236,7 @@ class MapCards extends StatelessWidget {
             child: BuildingCard(
               pHorizontal: 3,
               pVertical: 1,
-              color: Colors.orange.shade500,
+              color: Colors.orange.shade500.withOpacity(0.5),
               moduleText: '',
               icon: Icons.monetization_on,
               requestId: '1AB',
