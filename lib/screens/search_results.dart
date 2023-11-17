@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+import 'package:uni_map/widgets/search_result.dart';
+
 class SearchResults extends StatefulWidget {
   SearchResults({super.key, required this.query});
 
@@ -12,9 +14,9 @@ class SearchResults extends StatefulWidget {
     return _SearchResultsState();
   }
 }
+
 class _SearchResultsState extends State<SearchResults> {
- 
- var areasResults = [];
+  var areasResults = [];
   var buildingsResults = [];
   var combinedResults = [];
   bool isQueryComplete = false;
@@ -101,42 +103,72 @@ class _SearchResultsState extends State<SearchResults> {
             ? CircularProgressIndicator()
             : (combinedResults.isEmpty)
                 ? Text('No se encontraron resultados para: ${widget.query}')
-                : ListView.builder(
-                    itemCount: combinedResults.length,
-                    itemBuilder: (context, index) {
-                      var item = combinedResults[index];
-                      if (item['type'] == 'building') {
-                        var buildingData = item['data'];
-                        if (buildingData['commonAreas'] != null &&
-                            buildingData['commonAreas'].isNotEmpty) {
-                          return ListTile(
-                            title: Text(buildingData['commonAreas'][0]['name']),
-                            subtitle: Text(
-                                "${buildingData['name']} - ${buildingData['commonAreas'][0]['level']}"),
-                          );
-                        } else if (buildingData['rooms'] != null &&
-                            buildingData['rooms'].isNotEmpty) {
-                          return ListTile(
-                            title: Text(
-                                "${buildingData['rooms'][0]['id']} - ${buildingData['rooms'][0]['name']}"),
-                            subtitle: Text(
-                                "${buildingData['name']} - ${buildingData['rooms'][0]['level']}"),
-                          );
-                        } else {
-                          return ListTile(
-                            title: Text(buildingData['name']),
-                            subtitle: Text(buildingData['description']),
-                          );
-                        }
-                      } else if (item['type'] == 'area') {
-                        var areaData = item['data'];
-                        return ListTile(
-                          title: Text(areaData['name']),
-                          subtitle: Text(areaData['type']),
-                        );
-                      }
-                      return SizedBox.shrink();
-                    },
+                : Container(
+                    margin: EdgeInsets.all(6),
+                    child: Expanded(
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 6),
+                            child: Text(
+                              "Mostrando resultados para ${widget.query}",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: combinedResults.length,
+                              itemBuilder: (context, index) {
+                                var item = combinedResults[index];
+                                if (item['type'] == 'building') {
+                                  var buildingData = item['data'];
+                                  if (buildingData['commonAreas'] != null &&
+                                      buildingData['commonAreas'].isNotEmpty) {
+                                    return SearchResult(
+                                      title: buildingData['commonAreas'][0]
+                                          ['name'],
+                                      subtitle:
+                                          "${buildingData['name']} - ${buildingData['commonAreas'][0]['level']}",
+                                      isBuilding: true,
+                                      Id: buildingData['id'],
+                                    );
+                                  } else if (buildingData['rooms'] != null &&
+                                      buildingData['rooms'].isNotEmpty) {
+                                    return SearchResult(
+                                      title:
+                                          "${buildingData['rooms'][0]['id']} - ${buildingData['rooms'][0]['name']}",
+                                      subtitle:
+                                          "${buildingData['name']} - ${buildingData['rooms'][0]['level']}",
+                                      isBuilding: true,
+                                      Id: buildingData['id'],
+                                    );
+                                  } else {
+                                    return SearchResult(
+                                      title: buildingData['name'],
+                                      subtitle: buildingData['description'],
+                                      isBuilding: true,
+                                      Id: buildingData['id'],
+                                    );
+                                  }
+                                } else if (item['type'] == 'area') {
+                                  var areaData = item['data'];
+                                  return SearchResult(
+                                    title: areaData['name'],
+                                    subtitle: areaData['type'],
+                                    isBuilding: false,
+                                    Id: areaData['id'],
+                                  );
+                                }
+                                return SizedBox.shrink();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
       ),
     );

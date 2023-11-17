@@ -41,12 +41,12 @@ class _LocationSearchBarState extends State<LocationSearchBar> {
               String query = searchController.text.trim();
               if(query.length > 0){
                 SearchHistoryService().saveSearchQuery(query);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SearchResults(query: query.toUpperCase())),
+                );
               }
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SearchResults(query: query.toUpperCase())),
-              );
             },
             iconSize: 30.0,
           ),
