@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uni_map/main.dart';
 import 'package:uni_map/building_details/ui/building_details.dart';
 import 'package:uni_map/screens/search_history.dart';
 import 'package:uni_map/screens/tab_screens/map.dart';
@@ -24,12 +23,10 @@ class HomeScreen extends StatelessWidget {
               Image(
                 image: AssetImage('assets/images/logo.png'),
                 height: 33,
-                width: 33,
+                width:33,
                 color: Colors.white,
               ),
-              SizedBox(
-                width: 5,
-              ),
+              SizedBox(width: 5,),
               Text(
                 'UniMap',
                 style: TextStyle(color: Colors.white),
@@ -38,15 +35,19 @@ class HomeScreen extends StatelessWidget {
           ),
           actions: <Widget>[
             IconButton(
-              icon: const Icon(Icons.navigate_next, color: Colors.white),
+              icon: const Icon(
+                Icons.history_outlined, 
+                color: Colors.white,
+                size: 30,
+              ),
               tooltip: 'Historial de Búsqueda',
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchHistory()),
-                );
-              },
-            ),
+                   Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchHistory()),
+                    );
+                  },
+                )
           ],
           notificationPredicate: (ScrollNotification notification) {
             return notification.depth == 1;
@@ -72,16 +73,13 @@ class HomeScreen extends StatelessWidget {
       unselectedLabelColor: Theme.of(context).colorScheme.primaryContainer,
       tabs: <Widget>[
         Tab(
-          icon: const Icon(Icons.apartment_outlined),
-          text: titles[0],
+          icon: const Icon(Icons.location_on_rounded, size: 30),
         ),
         Tab(
-          icon: const Icon(Icons.category_outlined),
-          text: titles[1],
+          icon: const Icon(Icons.apartment_outlined, size: 30),
         ),
         Tab(
-          icon: const Icon(Icons.contacts_outlined),
-          text: titles[2],
+          icon: const Icon(Icons.person, size: 30),
         ),
       ],
     );

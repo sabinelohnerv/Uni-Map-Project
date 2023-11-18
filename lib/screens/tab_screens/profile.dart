@@ -99,76 +99,74 @@ class _ProfileState extends State<Profile> {
 
         return Center(
           child: SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 117, 13, 54),
-                borderRadius: BorderRadius.circular(14.0),
+            child: Card(
+              margin: const EdgeInsets.all(20),
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
               ),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      UserImagePicker(
-                        onPickImage: _pickNewImage,
-                        initialImage: userData['image_url'],
-                      ),
-                      Text(
-                        userData['email'] ?? 'No email',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        initialValue: userData['username'],
-                        decoration: const InputDecoration(
-                            labelText: 'Nombre de usuario'),
-                        onChanged: (value) {
-                          _newUsername = value;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                        width: 150,
-                        child: ElevatedButton(
-                          onPressed: _updateProfile,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primaryContainer,
-                          ),
-                          child: const Text('Actualizar Perfil'),
+              shadowColor: Theme.of(context).colorScheme.primaryContainer,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    UserImagePicker(
+                      onPickImage: _pickNewImage,
+                      initialImage: userData['image_url'],
+                    ),
+                    Text(
+                      userData['email'] ?? 'No email',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      initialValue: userData['username'],
+                      decoration:
+                          const InputDecoration(labelText: 'Nombre de usuario'),
+                      onChanged: (value) {
+                        _newUsername = value;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: 150,
+                      child: ElevatedButton(
+                        onPressed: _updateProfile,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primaryContainer,
                         ),
+                        child: const Text('Actualizar Perfil'),
                       ),
-                      const SizedBox(height: 4),
-                      SizedBox(
-                        width: 150,
-                        child: ElevatedButton(
-                          onPressed: _profileServices.signOut,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primaryContainer,
-                          ),
-                          child: const Text('Cerrar Sesión'),
+                    ),
+                    const SizedBox(height: 4),
+                    SizedBox(
+                      width: 150,
+                      child: ElevatedButton(
+                        onPressed: _profileServices.signOut,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primaryContainer,
                         ),
+                        child: const Text('Cerrar Sesión'),
                       ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          TextButton(
-                            onPressed: _resetPassword,
-                            child: const Text('Restablecer Contraseña'),
-                          ),
-                          TextButton(
-                            onPressed: _showDeleteConfirmationDialog,
-                            child: const Text('Eliminar Cuenta'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: _resetPassword,
+                          child: const Text('Restablecer Contraseña'),
+                        ),
+                        TextButton(
+                          onPressed: _showDeleteConfirmationDialog,
+                          child: const Text('Eliminar Cuenta'),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),

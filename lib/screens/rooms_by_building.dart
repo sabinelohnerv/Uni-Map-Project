@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uni_map/services/api/api_service_rooms.dart';
+import 'package:uni_map/widgets/carrusel/building_carrusel.dart';
 import 'package:uni_map/widgets/room_cards/auditorium_classroom.dart';
 import 'package:uni_map/widgets/room_cards/computer_classroom.dart';
 import 'package:uni_map/widgets/room_cards/design_classroom.dart';
@@ -74,6 +75,9 @@ class _RoomByBuildingState extends State<RoomsByBuilding> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+              
+            ImageCarousel(id: widget.id),
+
             FutureBuilder<dynamic>(
               future: buildingDetailsFuture,
               builder: (context, snapshot) {

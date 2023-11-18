@@ -115,7 +115,7 @@ class _SearchResultsState extends State<SearchResults> {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                                  fontSize: 16, fontStyle: FontStyle.italic),
                             ),
                           ),
                           Expanded(

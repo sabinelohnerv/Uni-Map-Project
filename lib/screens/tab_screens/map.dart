@@ -19,7 +19,6 @@ class _UniMapState extends State<UniMap> {
   late GoogleMapController mapController;
   final LatLng _center = const LatLng(-17.724003172714774, -63.174729262014694);
   Location _location = Location();
-  //Set<Marker> _markers = {};
   late LatLng _currentPosition;
 
   @override
@@ -30,22 +29,9 @@ class _UniMapState extends State<UniMap> {
       setState(() {
         _currentPosition =
             LatLng(currentLocation.latitude!, currentLocation.longitude!);
-        /*_updateUserMarker(
-            _currentPosition); */
       });
     });
   }
-
-  /*_updateUserMarker(LatLng position) {
-    _markers.clear(); 
-    _markers.add(
-      Marker(
-        markerId: MarkerId('userMarker'),
-        position: position,
-        infoWindow: InfoWindow(title: 'Tu ubicación'),
-      ),
-    );
-  }*/
 
   _getCurrentLocation() async {
     try {
@@ -73,7 +59,6 @@ class _UniMapState extends State<UniMap> {
             target: _center,
             zoom: 17.645,
           ),
-          //markers: _markers,
           minMaxZoomPreference: const MinMaxZoomPreference(17.645, 17.645),
           scrollGesturesEnabled: false,
           rotateGesturesEnabled: false,

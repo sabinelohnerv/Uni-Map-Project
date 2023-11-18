@@ -40,22 +40,20 @@ class _BuildingDetailsPageState extends State<BuildingDetails> {
 
   Center getDetail(List<dynamic> data) {
     var bodyDetail = Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            child: ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return BuildingHomeCard(
-                  requestId: data[index]['id'],
-                  name: data[index]['name'],
-                  description: data[index]['description'],
-                );
-              },
-            ),
-          ),
-        ],
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 8.0, 
+          mainAxisSpacing: 8.0, 
+        ),
+        itemCount: data.length,
+        itemBuilder: (BuildContext context, int index) {
+          return BuildingHomeCard(
+            requestId: data[index]['id'],
+            name: data[index]['name'],
+            //description: data[index]['description'],
+          );
+        },
       ),
     );
     return bodyDetail;
