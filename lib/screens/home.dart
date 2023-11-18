@@ -74,16 +74,19 @@ class HomeScreen extends StatelessWidget {
       unselectedLabelColor: Theme.of(context).colorScheme.primaryContainer,
       tabs: <Widget>[
         Tab(
-          icon: const Icon(Icons.apartment_outlined),
-          text: titles[0],
+          icon: const Icon(Icons.location_on_rounded,
+          size: 30,),
+          //text: titles[0],
         ),
         Tab(
-          icon: const Icon(Icons.category_outlined),
-          text: titles[1],
+          icon: const Icon(Icons.apartment_outlined,
+          size: 30,),
+          //text: titles[1],
         ),
         Tab(
-          icon: const Icon(Icons.contacts_outlined),
-          text: titles[2],
+          icon: const Icon(Icons.person,
+          size: 30,),
+          //text: titles[2],
         ),
       ],
     );

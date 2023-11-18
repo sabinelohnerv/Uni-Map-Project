@@ -104,9 +104,8 @@ class _ProfileState extends State<Profile> {
               elevation: 5,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
-                side: const BorderSide(
-                    color: Color.fromARGB(255, 117, 13, 54), width: 2.0),
               ),
+              shadowColor: Theme.of(context).colorScheme.primaryContainer,
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(

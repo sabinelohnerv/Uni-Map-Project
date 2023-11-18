@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:uni_map/services/api/api_service_areas.dart'; 
 
@@ -8,6 +9,14 @@ class AreaInfo extends StatelessWidget {
     super.key,
     required this.buildingId,
   });
+
+  Future<String> getImageUrl(String buildingId) async {
+    final storage = FirebaseStorage.instance;
+    var url = await storage
+        .ref('areas/$buildingId/area.jpg')
+        .getDownloadURL();
+    return url;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +55,44 @@ class AreaInfo extends StatelessWidget {
                   data['name'] ?? 'No Name',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
-            ),      
+            ),  
+            content: Container(
+              margin: const EdgeInsets.all(5.0),
+              width: 200,
+              height: 200,
+              child: Card(
+                elevation: 8,
+                child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: FutureBuilder<String>(
+                      future: getImageUrl(buildingId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return const Center(child: Text('Error'));
+                        } else if (snapshot.hasData) {
+                          final data = snapshot.data!;
+                          return Image.network(
+                            data,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: 200,
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                ),
+              )
+            ),
             actions: <Widget>[
               TextButton(
                 child: const Text(

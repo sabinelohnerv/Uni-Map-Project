@@ -77,7 +77,11 @@ class BuildingInfo extends StatelessWidget {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Card(
+                Container(
+                  margin: const EdgeInsets.all(5.0),
+                  width: 200,
+                  height: 200,
+                  child: Card(
                   margin: const EdgeInsets.all(5),
                   elevation: 5,
                   shape: RoundedRectangleBorder(
@@ -90,25 +94,26 @@ class BuildingInfo extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(14.0),
                     child: FutureBuilder<String>(
-                      future: getImageUrl(buildingId),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return const Center(child: Text('Error'));
-                        } else if (snapshot.hasData) {
-                          final data = snapshot.data!;
-                          return Image.network(
-                            data,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: 200,
-                          );
-                        }
-                        return Container();
-                      },
+                        future: getImageUrl(buildingId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return const Center(child: Text('Error'));
+                          } else if (snapshot.hasData) {
+                            final data = snapshot.data!;
+                            return Image.network(
+                              data,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: 200,
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
                     ),
                   ),
                 ),
