@@ -40,7 +40,7 @@ class _LocationSearchBarState extends State<LocationSearchBar> {
             onPressed: () {
               String query = searchController.text.trim().toUpperCase();
               if(query.length > 0){
-                SearchHistoryService().saveSearchQueryIfNotExists(query);
+                SearchHistoryService().saveOrUpdateSearchQuery(query);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

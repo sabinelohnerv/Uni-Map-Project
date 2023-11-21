@@ -5,7 +5,7 @@ class SearchHistoryService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> saveSearchQueryIfNotExists(String query) async {
+  Future<void> saveOrUpdateSearchQuery(String query) async {
     String userId = _auth.currentUser?.uid ?? '';
     if (userId.isEmpty) {
       return;
@@ -29,11 +29,21 @@ class SearchHistoryService {
           'query': query,
           'date': Timestamp.now(),
         });
+      } else {
+        await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('search_history')
+            .doc(existingQuerySnapshot.docs.first.id)
+            .update({
+          'date': Timestamp.now(),
+        });
       }
     } catch (error) {
-      print('Error in saveSearchQueryIfNotExists: $error');
+      print('Error in saveOrUpdateSearchQuery: $error');
     }
   }
+
   Future<List<Map<String, dynamic>>> getSearchHistory() async {
     String userId = _auth.currentUser?.uid ?? '';
     List<Map<String, dynamic>> searchHistory = [];
@@ -44,8 +54,7 @@ class SearchHistoryService {
             .collection('users')
             .doc(userId)
             .collection('search_history')
-            .orderBy('date',
-                descending: true) 
+            .orderBy('date', descending: true)
             .get();
 
         for (var doc in querySnapshot.docs) {
