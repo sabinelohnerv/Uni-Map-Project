@@ -40,6 +40,7 @@ class SearchHistoryCard extends StatelessWidget {
               );
             },
             iconSize: 25.0,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ],
       ),

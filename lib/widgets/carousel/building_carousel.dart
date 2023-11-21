@@ -3,7 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class ImageCarousel extends StatefulWidget {
-  const ImageCarousel({Key? key, required this.id}) : super(key: key);
+  const ImageCarousel({super.key, required this.id});
 
   final String id;
 
