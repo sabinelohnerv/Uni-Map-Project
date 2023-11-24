@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uni_map/building_details/ui/building_details.dart';
+import 'package:uni_map/screens/building_details/ui/building_details.dart';
 import 'package:uni_map/screens/search_history.dart';
 import 'package:uni_map/screens/tab_screens/map.dart';
 import 'package:uni_map/screens/tab_screens/profile.dart';

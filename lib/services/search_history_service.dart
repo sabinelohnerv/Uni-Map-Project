@@ -59,6 +59,7 @@ class SearchHistoryService {
 
         for (var doc in querySnapshot.docs) {
           Map<String, dynamic> searchEntry = doc.data() as Map<String, dynamic>;
+          searchEntry['id'] = doc.id;
           searchHistory.add(searchEntry);
         }
       } catch (error) {
@@ -67,5 +68,23 @@ class SearchHistoryService {
     }
 
     return searchHistory;
+  }
+
+  Future<void> deleteSearchHistoryEntry(String queryId) async {
+    String userId = _auth.currentUser?.uid ?? '';
+    if (userId.isEmpty || queryId.isEmpty) {
+      return;
+    }
+
+    try {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('search_history')
+          .doc(queryId)
+          .delete();
+    } catch (error) {
+      print('Error deleting search history entry: $error');
+    }
   }
 }

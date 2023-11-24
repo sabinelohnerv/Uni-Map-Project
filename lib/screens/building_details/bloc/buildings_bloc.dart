@@ -2,8 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-import 'package:uni_map/building_details/bloc/buildings_event.dart';
-import 'package:uni_map/building_details/bloc/buildings_state.dart';
+import 'package:uni_map/screens/building_details/bloc/buildings_event.dart';
+import 'package:uni_map/screens/building_details/bloc/buildings_state.dart';
 
 class BuildingBloc extends Bloc<BuildingEvents, BuildingStates> {
   List<dynamic> data = [];

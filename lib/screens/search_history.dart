@@ -12,6 +12,10 @@ class SearchHistory extends StatefulWidget {
 class _SearchHistoryState extends State<SearchHistory> {
   final SearchHistoryService _searchHistoryService = SearchHistoryService();
 
+  Future<void> _deleteSearchItem(String searchId) async {
+    await _searchHistoryService.deleteSearchHistoryEntry(searchId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,14 +61,18 @@ class _SearchHistoryState extends State<SearchHistory> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No search history found'));
+            return Center(child: Text('No has hecho ninguna búsqueda.'));
           } else {
             return ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 var searchItem = snapshot.data![index];
+                String searchId = searchItem['id'];
+                
                 return SearchHistoryCard(
                   displayText: searchItem['query'],
+                  searchId: searchId,
+                  deleteSearch: _deleteSearchItem,
                 );
               },
             );
