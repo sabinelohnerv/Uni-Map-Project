@@ -169,9 +169,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             autocorrect: false,
                             textCapitalization: TextCapitalization.none,
                             validator: (value) {
-                              if (value == null ||
+                              if ((value == null ||
                                   value.trim().isEmpty ||
-                                  !isValidEmail(value)) {
+                                  !isValidEmail(value)) && !_isLogin) {
                                 return 'Por favor ingresa un email válido institucional.';
                               }
                               return null;
@@ -215,7 +215,16 @@ class _AuthScreenState extends State<AuthScreen> {
                             obscureText: _obscureText,
                             validator: (value) {
                               if (value == null || !isValidPassword(value)) {
-                                return 'La contraseña debe tener al menos 8 caracteres.';
+                                if (!_isLogin) {
+                                  return '''La contraseña contener al menos: 
+- 8 caracteres.
+- Una minúscula
+- Una mayúscula
+- Un número
+- Un caracter especial''';
+                                } else {
+                                  return 'La contraseña no coincide con el email ingresado';
+                                }
                               }
                               _enteredPassword = value;
                               return null;

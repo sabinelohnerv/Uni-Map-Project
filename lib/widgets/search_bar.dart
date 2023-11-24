@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:uni_map/screens/search_results.dart';
 import 'package:uni_map/services/search_history_service.dart';
 
@@ -50,7 +51,9 @@ class _LocationSearchBarState extends State<LocationSearchBar> {
             },
             iconSize: 30.0,
           ),
+          counterText: '',
         ),
+        maxLength: 20,
       ),
     );
   }

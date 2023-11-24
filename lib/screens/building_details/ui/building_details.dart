@@ -47,8 +47,8 @@ class _BuildingDetailsPageState extends State<BuildingDetails> {
       itemCount: 8,
       itemBuilder: (BuildContext context, int index) {
         return Shimmer.fromColors(
-          baseColor: Colors.grey[400]!,
-          highlightColor: Colors.grey[200]!,
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
           child: Container(
             margin: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
