@@ -164,7 +164,9 @@ class _AuthScreenState extends State<AuthScreen> {
                           TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Email',
+                              counterText: '',
                             ),
+                            maxLength: 320,
                             keyboardType: TextInputType.emailAddress,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.none,
@@ -183,7 +185,9 @@ class _AuthScreenState extends State<AuthScreen> {
                           if (!_isLogin)
                             TextFormField(
                               decoration: const InputDecoration(
-                                  labelText: 'Nombre de usuario'),
+                                  labelText: 'Nombre de usuario',
+                                  counterText: ''),
+                              maxLength: 64,
                               enableSuggestions: false,
                               validator: (value) {
                                 if (value == null ||
@@ -200,6 +204,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           TextFormField(
                             decoration: InputDecoration(
                               labelText: 'Contraseña',
+                              counterText: '',
                               suffixIcon: IconButton(
                                   onPressed: () {
                                     setState(() {
@@ -212,6 +217,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                         : Icons.visibility_off,
                                   )),
                             ),
+                            maxLength: 128,
                             obscureText: _obscureText,
                             validator: (value) {
                               if (value == null || !isValidPassword(value)) {
@@ -237,6 +243,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             TextFormField(
                               decoration: InputDecoration(
                                 labelText: 'Confirmar contraseña',
+                                counterText: '',
                                 suffixIcon: IconButton(
                                     onPressed: () {
                                       setState(() {
@@ -249,6 +256,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                           : Icons.visibility_off,
                                     )),
                               ),
+                              maxLength: 35,
                               obscureText: _obscureText,
                               validator: (value) {
                                 if (value != _enteredPassword) {
