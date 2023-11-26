@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:uni_map/widgets/no_results.dart';
+import 'package:uni_map/widgets/search/no_results.dart';
 import 'dart:convert' as convert;
 
-import 'package:uni_map/widgets/search_result.dart';
+import 'package:uni_map/widgets/search/search_result.dart';
+import 'package:uni_map/widgets/search/search_skeleton.dart';
 
 class SearchResults extends StatefulWidget {
   SearchResults({super.key, required this.query});
@@ -101,7 +102,10 @@ class _SearchResultsState extends State<SearchResults> {
       ),
       body: Center(
         child: !isQueryComplete
-            ? CircularProgressIndicator()
+            ? ListView.builder(
+                itemCount: 8,
+                itemBuilder: (context, index) => SearchSkeleton(),
+              )
             : (combinedResults.isEmpty)
                 ? NoResults()
                 : Container(

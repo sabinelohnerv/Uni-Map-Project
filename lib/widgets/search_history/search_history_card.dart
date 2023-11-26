@@ -42,7 +42,7 @@ class SearchHistoryCard extends StatelessWidget {
           border: Border.all(color: Colors.grey.shade100),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
               width: screenWidth * 0.5,

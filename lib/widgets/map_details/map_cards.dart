@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:uni_map/widgets/map_details/areas/area_info.dart';
 import 'package:uni_map/widgets/map_details/buildings/building_card.dart';
 import 'package:uni_map/widgets/map_details/areas/area_details.dart';
-import 'package:uni_map/widgets/search_bar.dart';
+import 'package:uni_map/widgets/search/search_bar.dart';
 
 class MapCards extends StatelessWidget {
   const MapCards({super.key});

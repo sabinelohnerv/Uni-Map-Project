@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uni_map/services/search_history_service.dart';
-import 'package:uni_map/widgets/search_history_card.dart';
+import 'package:uni_map/widgets/search_history/search_history_card.dart';
+import 'package:uni_map/widgets/search_history/search_history_skeleton.dart';
 
 class SearchHistory extends StatefulWidget {
   @override
@@ -57,7 +58,10 @@ class _SearchHistoryState extends State<SearchHistory> {
         future: _searchHistoryService.getSearchHistory(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return ListView.builder(
+              itemCount: 8, 
+              itemBuilder: (context, index) => SearchHistorySkeleton(),
+            );
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
