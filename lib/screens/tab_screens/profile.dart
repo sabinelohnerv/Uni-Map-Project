@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:uni_map/screens/tab_screens/widgets/CardDatesProfile.dart';
 import 'package:uni_map/services/profile_services.dart';
 import 'package:uni_map/widgets/user_image_picker.dart';
+
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -97,82 +99,111 @@ class _ProfileState extends State<Profile> {
 
         final userData = snapshot.data!;
 
-        return Center(
-          child: SingleChildScrollView(
-            child: Card(
-              margin: const EdgeInsets.all(20),
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              shadowColor: Theme.of(context).colorScheme.primaryContainer,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      UserImagePicker(
-                        onPickImage: _pickNewImage,
-                        initialImage: userData['image_url'],
+        return Scaffold(
+          body: Stack(
+                children: [
+                  Image.asset('assets/Building/8.png',
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(215, 90, 0, 0),
+                    child: 
+                    UserImagePicker(
+                      onPickImage: _pickNewImage,
+                      initialImage: userData['image_url'],
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 70, 0, 0),
+                    child: Text('Bienvenid@ \n ${userData['username']}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 27,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text(
-                        userData['email'] ?? 'No email',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        initialValue: userData['username'],
-                        decoration: const InputDecoration(
-                            labelText: 'Nombre de usuario'),
-                        onChanged: (value) {
-                          _newUsername = value;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                        width: 150,
-                        child: ElevatedButton(
-                          onPressed: _updateProfile,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primaryContainer,
-                          ),
-                          child: const Text('Actualizar Perfil'),
+                    ),
+                  ),
+                  
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: 
+                  Container(
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF964164),
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(20),
+                          topLeft: Radius.circular(20),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      SizedBox(
-                        width: 150,
-                        child: ElevatedButton(
-                          onPressed: _profileServices.signOut,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primaryContainer,
-                          ),
-                          child: const Text('Cerrar Sesión'),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          TextButton(
-                            onPressed: _resetPassword,
-                            child: const Text('Restablecer Contraseña'),
-                          ),
-                          TextButton(
-                            onPressed: _showDeleteConfirmationDialog,
-                            child: const Text('Eliminar Cuenta'),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xFF964164),
+                            blurRadius: 7,
                           ),
                         ],
                       ),
-                    ],
+                      width: 290,
+                      height: 60,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: _updateProfile,
+                            icon: const Icon(
+                              Icons.image_rounded,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(width: 18),
+                          IconButton(
+                            onPressed: _resetPassword,
+                            icon: const Icon(
+                              Icons.lock,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                          
+                          ),
+                          const SizedBox(width: 18),
+                          IconButton(
+                            onPressed: _showDeleteConfirmationDialog,
+                            icon: const Icon(
+                              Icons.delete,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                        
+                          ),
+                          const SizedBox(width: 18),
+                          IconButton(
+                            onPressed: _profileServices.signOut,
+                            icon: const Icon(
+                              Icons.logout,
+                              size: 30,
+                              color: Colors.white,
+                            ),        
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
+
+
+                  SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 250, 0, 0),
+                        child:CardDatesProfile(_newUsername),
+                    )
+                  ),
+            ],
+          ),
         );
       },
     );
   }
 }
+

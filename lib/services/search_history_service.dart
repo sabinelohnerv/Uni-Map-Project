@@ -5,19 +5,42 @@ class SearchHistoryService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> saveSearchQuery(String query) async {
+  Future<void> saveOrUpdateSearchQuery(String query) async {
     String userId = _auth.currentUser?.uid ?? '';
-    if (userId.isNotEmpty) {
-      await _firestore
+    if (userId.isEmpty) {
+      return;
+    }
+
+    try {
+      QuerySnapshot existingQuerySnapshot = await _firestore
           .collection('users')
           .doc(userId)
           .collection('search_history')
-          .add({
-        'query': query,
-        'date': Timestamp.now(),
-      }).catchError((error){
-        print('Error saving search query: $error');
-      });
+          .where('query', isEqualTo: query)
+          .limit(1)
+          .get();
+
+      if (existingQuerySnapshot.docs.isEmpty) {
+        await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('search_history')
+            .add({
+          'query': query,
+          'date': Timestamp.now(),
+        });
+      } else {
+        await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('search_history')
+            .doc(existingQuerySnapshot.docs.first.id)
+            .update({
+          'date': Timestamp.now(),
+        });
+      }
+    } catch (error) {
+      print('Error in saveOrUpdateSearchQuery: $error');
     }
   }
 
@@ -31,8 +54,7 @@ class SearchHistoryService {
             .collection('users')
             .doc(userId)
             .collection('search_history')
-            .orderBy('date',
-                descending: true) 
+            .orderBy('date', descending: true)
             .get();
 
         for (var doc in querySnapshot.docs) {

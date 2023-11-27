@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:uni_map/widgets/no_results.dart';
 import 'dart:convert' as convert;
 
 import 'package:uni_map/widgets/search_result.dart';
@@ -102,7 +103,7 @@ class _SearchResultsState extends State<SearchResults> {
         child: !isQueryComplete
             ? CircularProgressIndicator()
             : (combinedResults.isEmpty)
-                ? Text('No se encontraron resultados para: ${widget.query}')
+                ? NoResults()
                 : Container(
                     margin: EdgeInsets.all(6),
                     child: Expanded(
@@ -115,7 +116,7 @@ class _SearchResultsState extends State<SearchResults> {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                                  fontSize: 16, fontStyle: FontStyle.italic),
                             ),
                           ),
                           Expanded(

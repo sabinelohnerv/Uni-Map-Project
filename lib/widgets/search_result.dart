@@ -45,7 +45,6 @@ class SearchResult extends StatelessWidget {
               height: 4,
             ),
             Text(
-
               subtitle,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,

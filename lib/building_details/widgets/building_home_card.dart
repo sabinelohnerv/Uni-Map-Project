@@ -67,7 +67,7 @@ class BuildingHomeCard extends StatelessWidget {
                 right: 0,
                 child: Container(
                   padding: const EdgeInsets.all(8),
-                  color: Color.fromARGB(255, 117, 13, 54).withOpacity(0.6),
+                  color: const Color.fromARGB(255, 117, 13, 54).withOpacity(0.6),
                   child: Text(
                     name,
                     textAlign: TextAlign.center,

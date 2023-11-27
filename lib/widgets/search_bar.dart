@@ -38,13 +38,13 @@ class _LocationSearchBarState extends State<LocationSearchBar> {
           suffixIcon: IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              String query = searchController.text.trim();
+              String query = searchController.text.trim().toUpperCase();
               if(query.length > 0){
-                SearchHistoryService().saveSearchQuery(query);
+                SearchHistoryService().saveOrUpdateSearchQuery(query);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => SearchResults(query: query.toUpperCase())),
+                      builder: (context) => SearchResults(query: query)),
                 );
               }
             },

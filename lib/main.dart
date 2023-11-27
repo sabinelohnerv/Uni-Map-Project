@@ -10,12 +10,6 @@ import 'firebase_options.dart';
 
 import 'package:uni_map/screens/auth_screens/auth.dart';
 
-List<String> titles = <String>[
-  'Mapa',
-  'Campus',
-  'Perfil',
-];
-
 var kTextTabBarHeight = 48.0;
 
 Future<bool> checkEmailVerified(User user) async {

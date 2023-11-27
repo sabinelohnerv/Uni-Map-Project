@@ -47,24 +47,48 @@ class _UserImagePickerState extends State<UserImagePicker> {
       return null;
     }
 
-    return Column(
+    return Stack(
       children: [
-        CircleAvatar(
-          radius: 40,
-          backgroundColor: Colors.grey,
-          backgroundImage: getImageProvider(),
-          child: _pickedImageFile == null && widget.initialImage == null
-              ? const Icon(Icons.person, size: 60, color: Colors.white)
-              : null,
-        ),
-        TextButton.icon(
-          onPressed: _pickImage,
-          icon: const Icon(Icons.image),
-          label: Text(
-            'Elegir imagen',
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        Container(
+          width: 83,
+          height: 83,
+         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(60),
+          color: Colors.white,
+         ),
+         child: Center(
+          child: CircleAvatar(
+            radius: 40,
+            backgroundColor: Colors.grey,
+            backgroundImage: getImageProvider(),
+            child: _pickedImageFile == null && widget.initialImage == null
+                ? const Icon(Icons.person, size: 60, color: Colors.white)
+                : null,
           ),
+         )
         ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(43, 47, 0, 0),
+          child: ElevatedButton(
+            onPressed: _pickImage,
+            child: const Icon(
+              Icons.camera_alt,
+              size: 17,
+              color: Colors.white,
+            ),
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(
+                side: BorderSide(
+                  color: Colors.white,
+                  width: 1,
+                ),
+              ),
+              padding: const EdgeInsets.all(5),
+              minimumSize: const Size(17, 17),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        )
       ],
     );
   }
