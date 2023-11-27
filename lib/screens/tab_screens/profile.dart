@@ -16,15 +16,12 @@ class _ProfileState extends State<Profile> {
   final ProfileServices _profileServices = ProfileServices();
   File? _newProfileImage;
   String? _newUsername;
+  String? _originalUsername;
 
   void _pickNewImage(File image) {
     setState(() {
       _newProfileImage = image;
     });
-  }
-
-  Future<void> _updateProfile() async {
-    await _profileServices.updateProfile(_newProfileImage, _newUsername);
   }
 
   Future<void> _showDeleteConfirmationDialog() async {
@@ -89,6 +86,10 @@ class _ProfileState extends State<Profile> {
           return const Center(child: CircularProgressIndicator());
         }
 
+        if (snapshot.hasData && _originalUsername == null) {
+          _originalUsername = snapshot.data!['username'];
+        }
+
         if (snapshot.data == null) {
           return const Center(
             child: Text("No se encontró el usuario"),
@@ -123,8 +124,11 @@ class _ProfileState extends State<Profile> {
                     const SizedBox(height: 8),
                     TextFormField(
                       initialValue: userData['username'],
-                      decoration:
-                          const InputDecoration(labelText: 'Nombre de usuario'),
+                      maxLength: 64,
+                      decoration: const InputDecoration(
+                        labelText: 'Nombre de usuario',
+                        counterText: '',
+                      ),
                       onChanged: (value) {
                         _newUsername = value;
                       },
@@ -174,5 +178,28 @@ class _ProfileState extends State<Profile> {
         );
       },
     );
+  }
+
+  Future<void> _updateProfile() async {
+    if (_newUsername == null ||
+        _newUsername!.isEmpty ||
+        _newUsername!.length <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('El nombre de usuario no puede estar vacío.'),
+        ),
+      );
+
+      setState(() {
+        _newUsername = _originalUsername;
+      });
+    } else {
+      await _profileServices.updateProfile(_newProfileImage, _newUsername);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Los cambios han sido actualizados.'),
+        ),
+      );
+    }
   }
 }
