@@ -72,19 +72,19 @@ class HomeScreen extends StatelessWidget {
     return TabBar(
       labelColor: Colors.white,
       unselectedLabelColor: Theme.of(context).colorScheme.primaryContainer,
-      tabs: <Widget>[
+      tabs: const <Widget>[
         Tab(
-          icon: const Icon(Icons.location_on_rounded,
+          icon: Icon(Icons.location_on_rounded,
           size: 30,),
           //text: titles[0],
         ),
         Tab(
-          icon: const Icon(Icons.apartment_outlined,
+          icon: Icon(Icons.apartment_outlined,
           size: 30,),
           //text: titles[1],
         ),
         Tab(
-          icon: const Icon(Icons.person,
+          icon: Icon(Icons.person,
           size: 30,),
           //text: titles[2],
         ),

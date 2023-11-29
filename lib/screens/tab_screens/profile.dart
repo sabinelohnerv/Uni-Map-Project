@@ -1,6 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:uni_map/screens/tab_screens/widgets/CardDatesProfile.dart';
+import 'package:uni_map/screens/tab_screens/widgets/card_dates_profile.dart';
+import 'package:uni_map/screens/tab_screens/widgets/delete_account.dart';
+import 'package:uni_map/screens/tab_screens/widgets/profile_skeleton.dart';
+import 'package:uni_map/screens/tab_screens/widgets/reset_password.dart';
+import 'package:uni_map/screens/tab_screens/widgets/sign_off.dart';
+import 'package:uni_map/screens/tab_screens/widgets/update_profile_card.dart';
 import 'package:uni_map/services/profile_services.dart';
 import 'package:uni_map/widgets/user_image_picker.dart';
 
@@ -18,68 +23,12 @@ class _ProfileState extends State<Profile> {
   final ProfileServices _profileServices = ProfileServices();
   File? _newProfileImage;
   String? _newUsername;
+  String? _originalUsername;
 
   void _pickNewImage(File image) {
     setState(() {
       _newProfileImage = image;
     });
-  }
-
-  Future<void> _updateProfile() async {
-    await _profileServices.updateProfile(_newProfileImage, _newUsername);
-  }
-
-  Future<void> _showDeleteConfirmationDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirmación'),
-          content: const SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('¿Estás seguro de que quieres eliminar tu cuenta?'),
-                Text('Esta acción es irreversible.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Eliminar'),
-              onPressed: () async {
-                await _profileServices.deleteAccount();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _resetPassword() async {
-    try {
-      await _profileServices.sendPasswordResetEmail();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-              'Correo de restablecimiento enviado. Por favor, revisa tu bandeja de entrada.'),
-        ),
-      );
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error al enviar el correo de restablecimiento.'),
-        ),
-      );
-    }
   }
 
   @override
@@ -88,7 +37,11 @@ class _ProfileState extends State<Profile> {
       future: _profileServices.getUserData(),
       builder: (ctx, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: ProfileSkeleton());
+        }
+
+        if (snapshot.hasData && _originalUsername == null) {
+          _originalUsername = snapshot.data!['username'];
         }
 
         if (snapshot.data == null) {
@@ -101,104 +54,112 @@ class _ProfileState extends State<Profile> {
 
         return Scaffold(
           body: Stack(
-                children: [
-                  Image.asset('assets/Building/8.png',
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                  ),
+            children: [
+              Image.asset('assets/Building/8.png',
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              ),
 
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(215, 90, 0, 0),
-                    child: 
-                    UserImagePicker(
-                      onPickImage: _pickNewImage,
-                      initialImage: userData['image_url'],
-                    ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(215, 90, 0, 0),
+                child: 
+                UserImagePicker(
+                  onPickImage: _pickNewImage,
+                  initialImage: userData['image_url'],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 70, 0, 0),
+                child: Text('Bienvenid@ \n ${userData['username']}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 27,
+                    fontWeight: FontWeight.bold,
                   ),
-
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 70, 0, 0),
-                    child: Text('Bienvenid@ \n ${userData['username']}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 27,
-                        fontWeight: FontWeight.bold,
-                      ),
+                ),
+              ),
+              
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: 
+                Container(
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF964164),
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(20),
                     ),
-                  ),
-                  
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: 
-                  Container(
-                      decoration: const BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
                         color: Color(0xFF964164),
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(20),
-                          topLeft: Radius.circular(20),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0xFF964164),
-                            blurRadius: 7,
-                          ),
-                        ],
+                        blurRadius: 7,
                       ),
-                      width: 290,
-                      height: 60,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            onPressed: _updateProfile,
-                            icon: const Icon(
-                              Icons.image_rounded,
-                              size: 30,
-                              color: Colors.white,
+                    ],
+                  ),
+                  width: 320,
+                  height: 90,
+                  child: Row(
+                      children: [
+                        const SizedBox(width: 15),
+                        const ResetPassword(),
+                        const SizedBox(width: 10),
+                        const SignOff(),
+                        const SizedBox(width: 10),
+                        const DeleteAccount(),
+                        const SizedBox(width: 10),
+
+                        InkWell(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (ctx) => UpdateProfileCard(),
+                            );
+                          },
+                          child: Material(
+                            borderRadius: BorderRadius.circular(10),
+                            elevation: 5,
+                            child: Container(
+                              width: 65,
+                              height: 65,
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: const Column(
+                                children: [
+                                  SizedBox(height: 2),
+                                  Icon(
+                                    Icons.edit, 
+                                    color: Color(0xFF964164), 
+                                    size: 23,
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text('Editar\nPerfil',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 18),
-                          IconButton(
-                            onPressed: _resetPassword,
-                            icon: const Icon(
-                              Icons.lock,
-                              size: 30,
-                              color: Colors.white,
-                            ),
-                          
-                          ),
-                          const SizedBox(width: 18),
-                          IconButton(
-                            onPressed: _showDeleteConfirmationDialog,
-                            icon: const Icon(
-                              Icons.delete,
-                              size: 30,
-                              color: Colors.white,
-                            ),
-                        
-                          ),
-                          const SizedBox(width: 18),
-                          IconButton(
-                            onPressed: _profileServices.signOut,
-                            icon: const Icon(
-                              Icons.logout,
-                              size: 30,
-                              color: Colors.white,
-                            ),        
-                          ),
-                        ],
-                      ),
+                          )
+                        )
+                      ],
                     ),
-                  ),
-
-
-                  SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 250, 0, 0),
-                        child:CardDatesProfile(_newUsername),
-                    )
-                  ),
+                ),
+              ),
+              const SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0, 250, 0, 0),
+                    child: CardDatesProfile(),
+                )
+              ),
             ],
           ),
         );
@@ -206,4 +167,3 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-
