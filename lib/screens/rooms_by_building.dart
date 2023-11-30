@@ -9,6 +9,8 @@ import 'package:uni_map/widgets/room_cards/lab_classroom.dart';
 import 'package:uni_map/widgets/room_cards/room_card.dart';
 import 'package:uni_map/widgets/room_cards/smart_classroom.dart';
 import 'package:uni_map/functions/util.dart';
+import 'package:uni_map/widgets/rooms_by_building/building_skeleton.dart';
+import 'package:uni_map/widgets/rooms_by_building/rooms_skeleton.dart';
 
 class RoomsByBuilding extends StatefulWidget {
   const RoomsByBuilding({super.key, required this.id});
@@ -82,7 +84,7 @@ class _RoomByBuildingState extends State<RoomsByBuilding> {
               future: buildingDetailsFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return BuildingSkeleton();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else if (snapshot.hasData) {
@@ -121,7 +123,7 @@ Widget buildExpandableList(String title, Future<List<dynamic>> futureList) {
     future: futureList,
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
+        return RoomsSkeleton();
       } else if (snapshot.hasError ||
           !snapshot.hasData ||
           snapshot.data!.isEmpty) {
