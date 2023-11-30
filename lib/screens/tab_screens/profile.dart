@@ -1,5 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:uni_map/widgets/profile/card_dates_profile.dart';
+import 'package:uni_map/widgets/profile/delete_account.dart';
+import 'package:uni_map/widgets/profile/profile_skeleton.dart';
+import 'package:uni_map/widgets/profile/reset_password.dart';
+import 'package:uni_map/widgets/profile/sign_off.dart';
+import 'package:uni_map/widgets/profile/update_profile_card.dart';
 import 'package:uni_map/services/profile_services.dart';
 import 'package:uni_map/widgets/user_image_picker.dart';
 
@@ -24,66 +30,13 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-  Future<void> _showDeleteConfirmationDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirmación'),
-          content: const SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('¿Estás seguro de que quieres eliminar tu cuenta?'),
-                Text('Esta acción es irreversible.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Eliminar'),
-              onPressed: () async {
-                await _profileServices.deleteAccount();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _resetPassword() async {
-    try {
-      await _profileServices.sendPasswordResetEmail();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-              'Correo de restablecimiento enviado. Por favor, revisa tu bandeja de entrada.'),
-        ),
-      );
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error al enviar el correo de restablecimiento.'),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, dynamic>?>(
       future: _profileServices.getUserData(),
       builder: (ctx, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: ProfileSkeleton());
         }
 
         if (snapshot.hasData && _originalUsername == null) {
@@ -98,108 +51,118 @@ class _ProfileState extends State<Profile> {
 
         final userData = snapshot.data!;
 
-        return Center(
-          child: SingleChildScrollView(
-            child: Card(
-              margin: const EdgeInsets.all(20),
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
+        return Stack(
+          children: [
+            Image.asset(
+              'assets/images/profile_img.png',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(215, 90, 0, 0),
+              child: UserImagePicker(
+                onPickImage: _pickNewImage,
+                initialImage: userData['image_url'],
               ),
-              shadowColor: Theme.of(context).colorScheme.primaryContainer,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 70, 0, 0),
+              child: Text(
+                'Bienvenid@, \n${userData['username']}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF964164),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(20),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xFF964164),
+                      blurRadius: 7,
+                    ),
+                  ],
+                ),
+                width: 320,
+                height: 90,
+                child: Row(
                   children: [
-                    UserImagePicker(
-                      onPickImage: _pickNewImage,
-                      initialImage: userData['image_url'],
-                    ),
-                    Text(
-                      userData['email'] ?? 'No email',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    const SizedBox(height: 8),
-                    TextFormField(
-                      initialValue: userData['username'],
-                      maxLength: 64,
-                      decoration: const InputDecoration(
-                        labelText: 'Nombre de usuario',
-                        counterText: '',
-                      ),
-                      onChanged: (value) {
-                        _newUsername = value;
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      width: 150,
-                      child: ElevatedButton(
-                        onPressed: _updateProfile,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primaryContainer,
-                        ),
-                        child: const Text('Actualizar Perfil'),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    SizedBox(
-                      width: 150,
-                      child: ElevatedButton(
-                        onPressed: _profileServices.signOut,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primaryContainer,
-                        ),
-                        child: const Text('Cerrar Sesión'),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        TextButton(
-                          onPressed: _resetPassword,
-                          child: const Text('Restablecer Contraseña'),
-                        ),
-                        TextButton(
-                          onPressed: _showDeleteConfirmationDialog,
-                          child: const Text('Eliminar Cuenta'),
-                        ),
-                      ],
-                    ),
+                    const SizedBox(width: 15),
+                    const ResetPassword(),
+                    const SizedBox(width: 10),
+                    const SignOff(),
+                    const SizedBox(width: 10),
+                    const DeleteAccount(),
+                    const SizedBox(width: 10),
+                    InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (ctx) => UpdateProfileCard(
+                              onProfileUpdated: (updatedUsername) {
+                                setState(() {
+                                  _newUsername = updatedUsername;
+                                });
+                              },
+                            ),
+                          );
+                        },
+                        child: Material(
+                          borderRadius: BorderRadius.circular(10),
+                          elevation: 5,
+                          child: Container(
+                            width: 65,
+                            height: 65,
+                            padding: const EdgeInsets.all(7),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: const Column(
+                              children: [
+                                SizedBox(height: 2),
+                                Icon(
+                                  Icons.edit,
+                                  color: Color(0xFF964164),
+                                  size: 22,
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  'Editar\nPerfil',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ))
                   ],
                 ),
               ),
             ),
-          ),
+            const SingleChildScrollView(
+                child: Padding(
+              padding: EdgeInsets.fromLTRB(0, 250, 0, 0),
+              child: CardDatesProfile(),
+            )),
+          ],
         );
       },
     );
-  }
-
-  Future<void> _updateProfile() async {
-    if (_newUsername == null ||
-        _newUsername!.isEmpty ||
-        _newUsername!.length <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('El nombre de usuario no puede estar vacío.'),
-        ),
-      );
-
-      setState(() {
-        _newUsername = _originalUsername;
-      });
-    } else {
-      await _profileServices.updateProfile(_newProfileImage, _newUsername);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Los cambios han sido actualizados.'),
-        ),
-      );
-    }
   }
 }
