@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:animated_background/animated_background.dart';
 import 'package:flutter/material.dart';
 import 'package:uni_map/widgets/user_image_picker.dart';
 import 'package:uni_map/services/firebase_auth_service.dart';
@@ -13,7 +14,7 @@ class AuthScreen extends StatefulWidget {
   }
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   final _form = GlobalKey<FormState>();
   final FirebaseAuthService _authService = FirebaseAuthService();
   var _isLogin = true;
@@ -125,9 +126,25 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
+      body: AnimatedBackground(
+        behaviour: RandomParticleBehaviour(
+          options: ParticleOptions(
+            baseColor: Colors.white,
+            spawnOpacity: 0.0,
+            opacityChangeRate: 0.55,
+            minOpacity: 0.1,
+            maxOpacity: 0.4,
+            spawnMinSpeed: 15.0,
+            spawnMaxSpeed: 50.0,
+            spawnMinRadius: 7.0,
+            spawnMaxRadius: 15.0,
+            particleCount: 30,
+          ),
+        ),
+        vsync: this,
+        child: Center( 
+          child: SingleChildScrollView(
+            child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
@@ -310,6 +327,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
             ],
+          ),
           ),
         ),
       ),

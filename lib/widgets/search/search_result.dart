@@ -35,20 +35,61 @@ class SearchResult extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              style: TextStyle(fontWeight: FontWeight.bold),
-              title,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Text(
-              subtitle,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            ),
+            Container(
+              width: double.infinity,
+              height: 60,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 255, 255, 255),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 3,
+                    blurRadius: 5, // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Positioned(
+                    left: 0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          bottomLeft: Radius.circular(12),
+                      ),
+                        color: Color(0xFF964164),
+                      ),
+                      height: 60,
+                      width: 8,
+                    )
+                  ),
+                  SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        title,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        subtitle,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            )
           ],
         ),
       ),
